@@ -5,6 +5,7 @@ import {
   OnChanges,
   Output,
   EventEmitter,
+  ViewChild,
 } from "@angular/core";
 import { WidgetService } from "src/app/service/widget.service";
 import { ToastrService } from "ngx-toastr";
@@ -17,6 +18,7 @@ import * as moment_t from "moment-timezone";
 import { Ng4LoadingSpinnerService } from "ng4-loading-spinner";
 import { ClockService } from "src/app/service/clock.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { WidgetBgSettingComponent } from "../widget-bg-setting/widget-bg-setting.component";
 
 @Component({
   selector: "app-clock-setting",
@@ -24,6 +26,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
   styleUrls: ["./clock-setting.component.scss"],
 })
 export class ClockSettingComponent implements OnInit, OnChanges {
+  @ViewChild('widgetBgSettingComponent', {static: false}) widgetBgSettingComponent: WidgetBgSettingComponent;
   @Input() clockSettingModal: any;
   @Input() category: string;
   @Input() activeLayout: any;
@@ -154,11 +157,6 @@ export class ClockSettingComponent implements OnInit, OnChanges {
     this.activeMirrorDetails = this.storage.get("activeMirrorDetails");
   }
 
-  onbgsettingOptions(event) {
-    this.newBgSetting = event;
-    this.onAddBackgroundSetting();
-  }
-
   onAddBackgroundSetting() {
     const payload = {
       userMirrorId: this.activeMirrorDetails.id,
@@ -166,7 +164,6 @@ export class ClockSettingComponent implements OnInit, OnChanges {
       widgetBackgroundSettingModel: this.newBgSetting,
     };
     this.commonFunction.updateWidgetSettings(this.newBgSetting, payload);
-    this.clockSettingModal.hide();
   }
 
   dismissModel() {
@@ -175,6 +172,13 @@ export class ClockSettingComponent implements OnInit, OnChanges {
 
   selectTimezone() {
     this.mapCurrentlySelectedTimezone(this.clockFormGroup.value.timeZoneId);
+  }
+
+  saveClockWidget() {
+    this.newBgSetting = this.widgetBgSettingComponent.bgSettingOptions;
+    this.saveClockSettings();
+    this.onAddBackgroundSetting();
+    this.dismissModel();
   }
 
   saveClockSettings() {
@@ -200,7 +204,6 @@ export class ClockSettingComponent implements OnInit, OnChanges {
         this.widgetLayoutDetails.widgetSetting = this.widgetSettings;
         this.storage.set("activeWidgetDetails", this.widgetLayoutDetails);
         this._dataService.setWidgetSettingsLayout(this.widgetLayoutDetails);
-        this.clockSettingModal.hide();
       },
       (err: any) => {
         this.loadingSpinner.hide();

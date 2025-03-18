@@ -251,7 +251,7 @@ export class WidgetBgSettingComponent
     if (this.widgetType.toLowerCase() === "calendar") {
       this.emitbgsettingCalenderOptions.emit(this.bgSettingOptions);
     } else if (this.widgetType.toLowerCase() === "clock") {
-      this.emitbgsettingOptions.emit(this.bgSettingOptions);
+      this.emitbgsettingOptions.emit();
     } else if (this.widgetType.toLowerCase() === "weather") {
       this.emitbgsettingWeatherOptions.emit(this.bgSettingOptions);
     } else if (this.widgetType.toLowerCase() === "news") {
